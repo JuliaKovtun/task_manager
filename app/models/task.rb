@@ -3,5 +3,7 @@ class Task < ApplicationRecord
 
   belongs_to :project
 
+  validates :title, presence: true, uniqueness: true
+
   scope :with_status, ->(status) { where(status: status) }
 end
