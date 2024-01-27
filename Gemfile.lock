@@ -76,6 +76,7 @@ GEM
       mutex_m
       tzinfo (~> 2.0)
     base64 (0.2.0)
+    bcrypt (3.1.20)
     bigdecimal (3.1.6)
     bootsnap (1.17.1)
       msgpack (~> 1.2)
@@ -88,6 +89,12 @@ GEM
     debug (1.9.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    devise (4.9.3)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.5.0)
     drb (2.2.0)
       ruby2_keywords
@@ -144,6 +151,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
+    orm_adapter (0.5.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -194,6 +202,9 @@ GEM
       psych (>= 4.0.0)
     reline (0.4.2)
       io-console (~> 0.5)
+    responders (3.1.1)
+      actionpack (>= 5.2)
+      railties (>= 5.2)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -214,6 +225,10 @@ GEM
     ruby2_keywords (0.0.5)
     shoulda-matchers (6.1.0)
       activesupport (>= 5.2.0)
+    simple_token_authentication (1.18.1)
+      actionmailer (>= 3.2.6, < 8)
+      actionpack (>= 3.2.6, < 8)
+      devise (>= 3.2, < 6)
     sqlite3 (1.7.0-aarch64-linux)
     sqlite3 (1.7.0-arm-linux)
     sqlite3 (1.7.0-arm64-darwin)
@@ -225,6 +240,8 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -242,6 +259,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  devise
   factory_bot_rails
   jbuilder
   pry
@@ -249,6 +267,7 @@ DEPENDENCIES
   rails (~> 7.1.2)
   rspec-rails
   shoulda-matchers
+  simple_token_authentication
   sqlite3 (~> 1.4)
   tzinfo-data
 
