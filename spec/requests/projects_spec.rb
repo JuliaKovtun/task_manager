@@ -2,6 +2,11 @@ require 'rails_helper'
 
 RSpec.describe 'Projects', type: :request do
   let!(:project) { create(:project) }
+  let!(:user) { create(:user) }
+
+  before do
+    allow_any_instance_of(ProjectsController).to receive(:current_user).and_return(user)
+  end
 
   describe 'GET /projects' do
     let!(:other_project) { create(:project, title: 'Some other project') }

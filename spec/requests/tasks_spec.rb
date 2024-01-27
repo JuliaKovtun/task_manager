@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe 'Tasks', type: :request do
   let!(:project) { create(:project) }
   let!(:task) { create(:task, project_id: project.id) }
+  let!(:user) { create(:user) }
+
+  before do
+    allow_any_instance_of(TasksController).to receive(:current_user).and_return(user)
+  end
 
   describe 'GET /projects/:project_id/tasks' do
     let!(:new_task) { create(:task, title: 'New task', project_id: project.id) }
