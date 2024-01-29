@@ -2,7 +2,7 @@
 
 class TasksController < ApplicationController
   before_action :set_task, only: %i[show update destroy]
-  before_action :set_project, only: :index
+  before_action :set_project, only: %i[index destroy]
 
   def index
     @tasks = if params[:status]
@@ -37,7 +37,12 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task.destroy
+    if @task.project == @project
+      @task.destroy
+      head :no_content
+    else
+      render json: { error: 'Task does not belong to the project' }, status: :unprocessable_entity
+    end
   end
 
   private
