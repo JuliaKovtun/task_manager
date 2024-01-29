@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Task < ApplicationRecord
   # prefix, because of reserved words
   enum status: { new: 0, in_progress: 1, done: 2 }, _prefix: true
@@ -6,5 +8,5 @@ class Task < ApplicationRecord
 
   validates :title, presence: true, uniqueness: true
 
-  scope :with_status, ->(status) { where(status: status) }
+  scope :with_status, ->(status) { where(status:) }
 end
