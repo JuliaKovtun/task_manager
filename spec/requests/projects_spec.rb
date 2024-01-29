@@ -8,6 +8,18 @@ RSpec.describe 'Projects', type: :request do
     allow_any_instance_of(ProjectsController).to receive(:current_user).and_return(user)
   end
 
+  context 'when user is not authenticated' do
+    before do
+      allow_any_instance_of(ProjectsController).to receive(:current_user).and_return(nil)
+    end
+
+    it 'returns 401 status with message' do
+      get projects_path, as: :json
+      expect(response).to have_http_status(401)
+      expect(response.body).to include('You need to sign in or sign up before continuing.')
+    end
+  end
+
   describe 'GET /projects' do
     let!(:other_project) { create(:project, title: 'Some other project') }
     let!(:task) { create(:task, project_id: project.id) }
