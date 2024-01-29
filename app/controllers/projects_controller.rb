@@ -2,7 +2,10 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: %i[show update destroy]
 
   def index
-    @projects = Project.with_tasks
+    cache_key = "projects_#{Project.maximum(:updated_at)}"
+    @projects = Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      Project.with_tasks
+    end
   end
 
   def show; end
