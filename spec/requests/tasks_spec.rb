@@ -46,13 +46,49 @@ RSpec.describe 'Tasks', type: :request do
         expect(response.body).to_not include(in_progress_task.title)
       end
     end
+
+    context 'when project does not exist' do
+      it 'returns a 404 status code with an error message' do
+        get project_tasks_path(project_id: 'nonexistent_id'), as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
+    end
   end
 
   describe 'GET /projects/:project_id/tasks/:id' do
-    it 'shows task' do
-      get project_task_path(project_id: project.id, id: task.id), as: :json
-      expect(response).to have_http_status(200)
-      expect(response.body).to include(task.title)
+    context 'when task and project exist' do
+      it 'shows task' do
+        get project_task_path(project_id: project.id, id: task.id), as: :json
+        expect(response).to have_http_status(200)
+        expect(response.body).to include(task.title)
+      end
+    end
+
+    context 'when project does not exist' do
+      it 'returns a 404 status code with an error message' do
+        get project_task_path(project_id: 'nonexistent_id', id: task.id), as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
+    end
+
+    context 'when task does not exist in the project' do
+      let!(:another_task) { create(:task, title: 'Another task title') }
+
+      it 'returns a 404 status code with an error message' do
+        get project_task_path(project_id: project.id, id: another_task.id), as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Task not found')
+      end
+    end
+
+    context 'when task does not exist' do
+      it 'returns a 404 status code with an error message' do
+        get project_task_path(project_id: project.id, id: 'nonexistent_id'), as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Task not found')
+      end
     end
   end
 
@@ -84,6 +120,16 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns status code 422' do
         post "/projects/#{project.id}/tasks", params: { task: task_params }, as: :json
         expect(response).to have_http_status(422)
+      end
+    end
+
+    context 'when project does not exist' do
+      let(:task_params) { { title: 'Task', description: 'The description of task.' } }
+
+      it 'returns a 404 status code with an error message' do
+        post '/projects/nonexistent_id/tasks', params: { task: task_params }, as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
       end
     end
   end
@@ -119,11 +165,70 @@ RSpec.describe 'Tasks', type: :request do
         expect(response).to have_http_status(422)
       end
     end
+
+    context 'when project does not exist' do
+      let(:task_params) { { title: 'other task title' } }
+
+      it 'returns a 404 status code with an error message' do
+        put "/projects/nonexistent_id/tasks/#{task.id}", params: { task: task_params }, as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
+    end
+
+    context 'when task does not exist in the project' do
+      let(:task_params) { { title: 'other task title' } }
+      let!(:another_task) { create(:task, title: 'Another task title') }
+
+      it 'returns a 404 status code with an error message' do
+        put "/projects/#{project.id}/tasks/#{another_task.id}", params: { task: task_params }, as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Task not found')
+      end
+    end
+
+    context 'when task does not exist' do
+      let(:task_params) { { title: 'other task title' } }
+
+      it 'returns a 404 status code with an error message' do
+        put "/projects/#{project.id}/tasks/nonexistent_id", params: { task: task_params }, as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Task not found')
+      end
+    end
   end
 
   describe 'DELETE /projects/:project_id/tasks/:id' do
-    it 'deletes the task' do
-      expect { delete "/projects/#{project.id}/tasks/#{task.id}", as: :json }.to change(Task, :count).by(-1)
+    context 'when task exists' do
+      it 'deletes the task' do
+        expect { delete "/projects/#{project.id}/tasks/#{task.id}", as: :json }.to change(Task, :count).by(-1)
+      end
+    end
+
+    context 'when project does not exist' do
+      it 'returns a 404 status code with an error message' do
+        delete "/projects/nonexistent_id/tasks/#{task.id}", as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
+    end
+
+    context 'when task does not exist in the project' do
+      let!(:another_task) { create(:task, title: 'Another task title') }
+
+      it 'returns a 404 status code with an error message' do
+        delete "/projects/#{project.id}/tasks/#{another_task.id}", as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Task not found')
+      end
+    end
+
+    context 'when task does not exist' do
+      it 'returns a 404 status code with an error message' do
+        delete "/projects/#{project.id}/tasks/nonexistent_id", as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Task not found')
+      end
     end
   end
 end

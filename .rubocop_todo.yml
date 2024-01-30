@@ -11,6 +11,8 @@
 # AllowedMethods: refine
 Metrics/BlockLength:
   Max: 103
+  Exclude:
+    - 'spec/**/*'
 
 # Offense count: 1
 # Configuration parameters: AllowedMethods, AllowedPatterns.

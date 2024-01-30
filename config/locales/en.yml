@@ -28,4 +28,6 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  errors:
+    project_not_found: 'Project not found'
+    task_not_found: 'Task not found'

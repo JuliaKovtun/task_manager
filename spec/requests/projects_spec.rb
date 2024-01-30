@@ -36,10 +36,20 @@ RSpec.describe 'Projects', type: :request do
   end
 
   describe 'GET /projects/:id' do
-    it 'shows project with its tasks' do
-      get project_path(project), as: :json
-      expect(response).to have_http_status(200)
-      expect(response.body).to include(project.title)
+    context 'when project is found' do
+      it 'shows project with its tasks' do
+        get project_path(project), as: :json
+        expect(response).to have_http_status(200)
+        expect(response.body).to include(project.title)
+      end
+    end
+
+    context 'when project is not found' do
+      it 'returns a 404 status code with an error message' do
+        get project_path('nonexistent_id'), as: :json
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
     end
   end
 
@@ -102,11 +112,31 @@ RSpec.describe 'Projects', type: :request do
         expect(response).to have_http_status(422)
       end
     end
+
+    context 'when project is not found' do
+      let(:project_params) { { title: 'other project title' } }
+
+      it 'returns a 404 status code with an error message' do
+        put '/projects/nonexistent_id', params: { project: project_params }
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
+    end
   end
 
   describe 'DELETE /projects/:id' do
-    it 'deletes the project' do
-      expect { delete "/projects/#{project.id}" }.to change(Project, :count).by(-1)
+    context 'when project is found' do
+      it 'deletes the project' do
+        expect { delete "/projects/#{project.id}" }.to change(Project, :count).by(-1)
+      end
+    end
+
+    context 'when project is not found' do
+      it 'returns a 404 status code with an error message' do
+        delete '/projects/nonexistent_id'
+        expect(response).to have_http_status(404)
+        expect(response.body).to include('Project not found')
+      end
     end
   end
 end

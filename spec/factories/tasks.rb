@@ -5,6 +5,6 @@ FactoryBot.define do
     title { 'Test task' }
     description { 'This task is for testing.' }
     status { :new }
-    project { create(:project) }
+    project { create(:project, title: 'Project with task') }
   end
 end

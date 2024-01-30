@@ -43,7 +43,7 @@ class ProjectsController < ApplicationController
   def set_project
     @project = Project.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Project not found' }, status: :not_found
+    render json: { error: I18n.t('errors.project_not_found') }, status: :not_found
   end
 
   def projects_cache_key

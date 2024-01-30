@@ -44,12 +44,12 @@ class TasksController < ApplicationController
   def set_task
     @task = @project.tasks.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Task not found' }, status: :not_found
+    render json: { error: I18n.t('errors.task_not_found') }, status: :not_found
   end
 
   def set_project
     @project = Project.find(params[:project_id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'Project not found' }, status: :not_found
+    render json: { error: I18n.t('errors.project_not_found') }, status: :not_found
   end
 end
