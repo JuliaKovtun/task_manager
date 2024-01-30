@@ -21,7 +21,7 @@ rails s --dev-caching
 ## API
 ### Authentication
 
-By default seeds create user with email <code>user@gmail.com</code> and password <code>123456</code>. You will need these credencials for authentication.
+By default seeds create the user with an email <code>user@gmail.com</code> and a password <code>123456</code>. You will need these credentials for authentication.
 
 ```bash
 curl --location --request POST 'http://localhost:3000/users/sign_in' \
@@ -42,6 +42,8 @@ On success, you will receive auth_token, which you will need to use in headers f
     "email": "user@gmail.com"
 }
 ```
+
+In the next requests you will need to replace **generated_token** with the one you receive in the response to this request.
 
 ### GET /projects/:id
 Returns one project.

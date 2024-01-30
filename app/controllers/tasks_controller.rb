@@ -1,16 +1,11 @@
 # frozen_string_literal: true
 
 class TasksController < ApplicationController
+  before_action :set_project
   before_action :set_task, only: %i[show update destroy]
-  before_action :set_project, only: %i[index destroy]
 
   def index
-    @tasks = if params[:status]
-               @project.tasks.with_status(params[:status])
-             else
-               @project.tasks
-             end
-
+    @tasks = params[:status] ? @project.tasks.with_status(params[:status]) : @project.tasks
     render json: @tasks
   end
 
@@ -19,7 +14,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = @project.tasks.new(task_params)
 
     if @task.save
       render json: @task, status: :created
@@ -37,26 +32,24 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    if @task.project == @project
-      @task.destroy
-      head :no_content
-    else
-      render json: { error: 'Task does not belong to the project' }, status: :unprocessable_entity
-    end
+    @task.destroy
   end
 
   private
 
   def task_params
-    permited_params = params.require(:task).permit(:title, :description, :status)
-    permited_params.merge({ project_id: params[:project_id] })
+    params.require(:task).permit(:title, :description, :status)
   end
 
   def set_task
-    @task = Task.find(params[:id])
+    @task = @project.tasks.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Task not found' }, status: :not_found
   end
 
   def set_project
     @project = Project.find(params[:project_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Project not found' }, status: :not_found
   end
 end
