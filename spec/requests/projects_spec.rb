@@ -18,7 +18,7 @@ RSpec.describe 'Projects', type: :request do
     it 'returns 401 status with message' do
       get projects_path, as: :json
       expect(response).to have_http_status(401)
-      expect(response.body).to include('You need to sign in or sign up before continuing.')
+      expect(response.body).to include(I18n.t('devise.failure.unauthenticated'))
     end
   end
 
@@ -48,7 +48,7 @@ RSpec.describe 'Projects', type: :request do
       it 'returns a 404 status code with an error message' do
         get project_path('nonexistent_id'), as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
   end
@@ -119,7 +119,7 @@ RSpec.describe 'Projects', type: :request do
       it 'returns a 404 status code with an error message' do
         put '/projects/nonexistent_id', params: { project: project_params }
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
   end
@@ -135,7 +135,7 @@ RSpec.describe 'Projects', type: :request do
       it 'returns a 404 status code with an error message' do
         delete '/projects/nonexistent_id'
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
   end

@@ -19,7 +19,7 @@ RSpec.describe 'Tasks', type: :request do
     it 'returns 401 status with message' do
       get project_tasks_path(project_id: project.id), as: :json
       expect(response).to have_http_status(401)
-      expect(response.body).to include('You need to sign in or sign up before continuing.')
+      expect(response.body).to include(I18n.t('devise.failure.unauthenticated'))
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         get project_tasks_path(project_id: 'nonexistent_id'), as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         get project_task_path(project_id: 'nonexistent_id', id: task.id), as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
 
@@ -79,7 +79,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         get project_task_path(project_id: project.id, id: another_task.id), as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Task not found')
+        expect(response.body).to include(I18n.t('errors.task_not_found'))
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         get project_task_path(project_id: project.id, id: 'nonexistent_id'), as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Task not found')
+        expect(response.body).to include(I18n.t('errors.task_not_found'))
       end
     end
   end
@@ -129,7 +129,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         post '/projects/nonexistent_id/tasks', params: { task: task_params }, as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
   end
@@ -172,7 +172,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         put "/projects/nonexistent_id/tasks/#{task.id}", params: { task: task_params }, as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
 
@@ -183,7 +183,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         put "/projects/#{project.id}/tasks/#{another_task.id}", params: { task: task_params }, as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Task not found')
+        expect(response.body).to include(I18n.t('errors.task_not_found'))
       end
     end
 
@@ -193,7 +193,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         put "/projects/#{project.id}/tasks/nonexistent_id", params: { task: task_params }, as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Task not found')
+        expect(response.body).to include(I18n.t('errors.task_not_found'))
       end
     end
   end
@@ -209,7 +209,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         delete "/projects/nonexistent_id/tasks/#{task.id}", as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Project not found')
+        expect(response.body).to include(I18n.t('errors.project_not_found'))
       end
     end
 
@@ -219,7 +219,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         delete "/projects/#{project.id}/tasks/#{another_task.id}", as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Task not found')
+        expect(response.body).to include(I18n.t('errors.task_not_found'))
       end
     end
 
@@ -227,7 +227,7 @@ RSpec.describe 'Tasks', type: :request do
       it 'returns a 404 status code with an error message' do
         delete "/projects/#{project.id}/tasks/nonexistent_id", as: :json
         expect(response).to have_http_status(404)
-        expect(response.body).to include('Task not found')
+        expect(response.body).to include(I18n.t('errors.task_not_found'))
       end
     end
   end
